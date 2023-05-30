@@ -84,6 +84,19 @@ async function run() {
       }
     });
 
+    
 
+    app.get("/toysDetails/:id", async (req, res) => {
+      const toyId = req.params.id; // Get the toy _id from the request parameters
+      try {
+        const toy = await toysCollection.findOne({ "toys._id": toyId }, { projection: { _id: 0, toys: { $elemMatch: { _id: toyId } } } });
+        if (toy) {
+          res.json(toy.toys[0]); // Send the toy details as the response
+        } else {
+          res.status(404).json({ error: "Toy not found" }); // Handle toy not found case
+        }
+      } catch (error) {
+        res.status(500).json({ error: "Internal server error" });
+      }
+    });
 
-  
