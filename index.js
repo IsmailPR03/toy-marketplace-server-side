@@ -100,3 +100,67 @@ async function run() {
       }
     });
 
+    //update section put method
+    app.get('/update', async (req, res) => {
+      const query = {}
+      const result = await allToysCollection.find(query).toArray()
+      res.send(result)
+    })
+    app.get('/update/:id', async (req, res) => {
+      const id = req.params.id
+
+      const query = { _id: new ObjectId(id) }
+      const result = await allToysCollection.findOne(query)
+      res.send(result)
+    })
+    app.put('/update/:id', async (req, res) => {
+
+      const id = req.params.id
+      console.log(id);
+      const query = { _id: new ObjectId(id) }
+      const options = { upsert: true }
+      const editToys = req.body
+      const updateToys = {
+        $set: {
+
+          price: editToys.price,
+          description: editToys.detailDescription,
+          quantity: editToys.availableQuantity
+        }
+
+      }
+
+      const result = await allToysCollection.updateOne(query, updateToys, options)
+      res.send(result)
+    })
+
+
+    app.delete('/update/:id', async (req, res) => {
+      const id = req.params.id
+      const query = { _id: new ObjectId(id) }
+
+      const result = await allToysCollection.deleteOne(query)
+      res.send(result)
+    })
+
+
+
+
+
+    app.post('/add-toy', async (req, res) => {
+      const toys = req.body
+      const query = {
+        pictureURL: toys.pictureURL,
+        name: toys.name,
+        sellerName: toys.sellerName,
+        subCategory: toys.subCategory,
+        price: toys.price,
+        rating: toys.rating,
+        description: toys.detailDescription,
+        email: toys.email,
+        quantity: toys.availableQuantity
+      }
+      const result = await allToysCollection.insertOne(query)
+      res.send(result)
+    })
+
