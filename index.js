@@ -45,4 +45,45 @@ async function run() {
       res.send(result)
     })
 
-   
+    // my Toys section 
+    app.get('/all-toys', async (req, res) => {
+      const query = {}
+      const result = await allToysCollection.find(query).sort({ "price": 1 }).limit(20).toArray()
+      res.send(result)
+    })
+
+    app.get('/all-toys/:id', async (req, res) => {
+      const id = req.params.id
+      const query = { _id: new ObjectId(id) }
+      const result = await allToysCollection.findOne(query)
+      res.send(result)
+    })
+
+
+    app.get('/my-toys', async (req, res) => {
+      const query = {}
+
+      const result = await allToysCollection.find(query).toArray()
+      res.send(result)
+    })
+    app.get('/my-toys/:email', async (req, res) => {
+      const email = req.params.email
+      const query = { email: email }
+      const result = await allToysCollection.find(query).sort({ "price": 1 }).toArray()
+      res.send(result)
+    })
+    app.get('/my-toys/search', async (req, res) => {
+      const { searchTerm } = req.query;
+      try {
+        const toys = await allToysCollection.find({
+          name: { $regex: searchTerm, $options: 'i' },
+        }).toArray();
+        res.json(toys);
+      } catch (error) {
+        res.status(500).json({ error: 'Failed to search toys' });
+      }
+    });
+
+
+
+  
