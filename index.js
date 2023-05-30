@@ -164,3 +164,29 @@ async function run() {
       res.send(result)
     })
 
+
+    // all toys
+
+
+    // Send a ping to confirm a successful connection
+    await client.db("admin").command({ ping: 1 });
+    console.log("Pinged your deployment. You successfully connected to MongoDB!");
+
+  } 
+  
+  finally {
+
+
+  }
+}
+run().catch(console.dir);
+
+app.get('/', async (req, res) => {
+  res.send("Toys server is running ")
+})
+
+
+app.listen(port, () => {
+  console.log(port, `server is running`);
+})
+
